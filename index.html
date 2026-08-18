@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Jnyaublog - 在荒岛上迎接黎明</title>
+
+<meta name="description" content="Jnyau&#39;s blogs ">
+
+
+<meta name="author" content="Jnyau Zhneg">
+<link rel="alternate" href="/atom.xml" title="Jnyaublog" type="application/atom+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+
+<script>var giscusTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';</script>
+
+
+<script>
+(function() {
+  var saved = localStorage.getItem('dawn-theme');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+  }
+})();
+</script>
+<!-- Baidu Analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?9e1196964a6b21074cc28f08a3937327";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<meta name="generator" content="Hexo 8.1.1"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+<body>
+  <div class="site-wrapper">
+    <aside class="site-sidebar" id="sidebar">
+  <button class="sidebar-collapse-btn" id="sidebar-collapse-btn" title="折叠侧边栏" aria-label="折叠侧边栏">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div class="sidebar-inner">
+    
+    
+    <div class="sidebar-profile">
+      <a href="/" class="profile-avatar-link animate-entry animate-delay-0">
+        <img src="/img/avatar.jpg" alt="Jnyau Zhneg" class="profile-avatar">
+      </a>
+      <a href="/" class="profile-name animate-entry animate-delay-0">Jnyau Zhneg</a>
+      <p class="profile-bio animate-entry animate-delay-80">在荒岛上迎接黎明</p>
+    </div>
+
+    <nav class="sidebar-nav animate-stagger-50">
+      
+        <a href="/" class="sidebar-nav-item animate-entry">
+          <span class="nav-icon">
+            <i class="fa fa-home"></i>
+            
+            
+            
+            
+            
+          </span>
+          <span class="nav-label">首页</span>
+        </a>
+      
+        <a href="/about/" class="sidebar-nav-item animate-entry">
+          <span class="nav-icon">
+            
+            
+            
+            
+            <i class="fa fa-user"></i>
+            
+          </span>
+          <span class="nav-label">关于</span>
+        </a>
+      
+        <a href="/archives/" class="sidebar-nav-item animate-entry">
+          <span class="nav-icon">
+            
+            <i class="fa fa-archive"></i>
+            
+            
+            
+            
+          </span>
+          <span class="nav-label">归档</span>
+        </a>
+      
+        <a href="/categories/" class="sidebar-nav-item animate-entry">
+          <span class="nav-icon">
+            
+            
+            <i class="fa fa-folder"></i>
+            
+            
+            
+          </span>
+          <span class="nav-label">分类</span>
+        </a>
+      
+        <a href="/tags/" class="sidebar-nav-item animate-entry">
+          <span class="nav-icon">
+            
+            
+            
+            <i class="fa fa-tags"></i>
+            
+            
+          </span>
+          <span class="nav-label">标签</span>
+        </a>
+      
+        <a href="/links/" class="sidebar-nav-item animate-entry">
+          <span class="nav-icon">
+            
+            
+            
+            
+            
+            <i class="fa fa-link"></i>
+          </span>
+          <span class="nav-label">友链</span>
+        </a>
+      
+    </nav>
+
+    <div class="sidebar-social animate-entry animate-delay-240">
+      
+        
+          <a href="https://github.com/uncle-monster" class="social-link" target="_blank" rel="noopener" title="GitHub">
+            <i class="fa fa-github"></i>
+            
+            
+            
+          </a>
+        
+          <a href="mailto:zhnegjnyau@gmail.com" class="social-link" target="_blank" rel="noopener" title="Email">
+            
+            <i class="fa fa-envelope"></i>
+            
+            
+          </a>
+        
+          <a href="/atom.xml" class="social-link" target="_blank" rel="noopener" title="RSS">
+            
+            
+            <i class="fa fa-rss"></i>
+            
+          </a>
+        
+      
+    </div>
+
+    <div class="sidebar-footer-info animate-entry animate-delay-240">
+      <span>&copy; 2026 Jnyau Zhneg</span>
+    </div>
+    
+  </div>
+</aside>
+
+    <main class="main-content">
+      <header class="site-header">
+  <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <nav class="header-nav animate-stagger-50">
+    
+      <a href="/" class="nav-item animate-entry">首页</a>
+    
+      <a href="/about/" class="nav-item animate-entry">关于</a>
+    
+      <a href="/archives/" class="nav-item animate-entry">归档</a>
+    
+      <a href="/categories/" class="nav-item animate-entry">分类</a>
+    
+      <a href="/tags/" class="nav-item animate-entry">标签</a>
+    
+      <a href="/links/" class="nav-item animate-entry">友链</a>
+    
+  </nav>
+</header>
+
+      <div class="content-area">
+        <div class="posts-list animate-stagger-60">
+  
+  <article class="post-card animate-entry">
+    
+    <div class="post-card-body">
+      <h2 class="post-card-title">
+        <a href="/posts/301c/">CS161 Lecture 2 - x86 Assembly and Call Stack</a>
+      </h2>
+      <div class="post-card-meta">
+        
+        <span class="meta-item">
+          <i class="fa fa-calendar"></i>
+          <time datetime="2026-08-18">2026-08-18</time>
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-folder"></i>
+          
+            <a href="/categories/course/">course</a>
+          
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags/cs161/">cs161</a>
+          
+            <a href="/tags/x86/">x86</a>
+          
+            <a href="/tags/assembly/">assembly</a>
+          
+            <a href="/tags/call-stack/">call-stack</a>
+          
+        </span>
+        
+      </div>
+      <div class="post-card-excerpt">
+        
+          C 程序如何转换为机器码，以及 32 位 x86 的数据表示、内存布局、AT&T 汇编语法、调用约定和函数栈帧。
+        
+      </div>
+      <a href="/posts/301c/" class="post-card-more">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-card animate-entry">
+    
+    <div class="post-card-body">
+      <h2 class="post-card-title">
+        <a href="/posts/d7d7/">科学上网推荐</a>
+      </h2>
+      <div class="post-card-meta">
+        
+        <span class="meta-item">
+          <i class="fa fa-calendar"></i>
+          <time datetime="2026-05-17">2026-05-17</time>
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-folder"></i>
+          
+            <a href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+          
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags/%E5%B7%A5%E5%85%B7/">工具</a>
+          
+        </span>
+        
+      </div>
+      <div class="post-card-excerpt">
+        
+          一个好用的科学上网机场推荐
+        
+      </div>
+      <a href="/posts/d7d7/" class="post-card-more">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-card animate-entry">
+    
+    <div class="post-card-body">
+      <h2 class="post-card-title">
+        <a href="/posts/93ae/">Flow Matching 交互式学习</a>
+      </h2>
+      <div class="post-card-meta">
+        
+        <span class="meta-item">
+          <i class="fa fa-calendar"></i>
+          <time datetime="2026-05-16">2026-05-16</time>
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-folder"></i>
+          
+            <a href="/categories/generation-models/">generation models</a>
+          
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags/paper-reading/">paper reading</a>
+          
+            <a href="/tags/flow/">flow</a>
+          
+        </span>
+        
+      </div>
+      <div class="post-card-excerpt">
+        
+          Flow Matching 是一种强大的生成模型范式。Vibe Coding了一个交互式学习页面，从直觉、数学基础、交互演示到训练算法，帮助直观理解 Flow Matching 的核心思想。
+        
+      </div>
+      <a href="/posts/93ae/" class="post-card-more">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-card animate-entry">
+    
+    <div class="post-card-body">
+      <h2 class="post-card-title">
+        <a href="/posts/aefb/">Linux服务器基础环境配置(代理+Claude Code)</a>
+      </h2>
+      <div class="post-card-meta">
+        
+        <span class="meta-item">
+          <i class="fa fa-calendar"></i>
+          <time datetime="2026-05-10">2026-05-10</time>
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-folder"></i>
+          
+            <a href="/categories/%E5%B7%A5%E4%BD%9C%E6%B5%81/">工作流</a>
+          
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags/%E5%B7%A5%E4%BD%9C%E6%B5%81/">工作流</a>
+          
+        </span>
+        
+      </div>
+      <div class="post-card-excerpt">
+        
+          Linux服务器基础环境配置，配置代理和Claude Code流程整理
+        
+      </div>
+      <a href="/posts/aefb/" class="post-card-more">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-card animate-entry">
+    
+    <div class="post-card-body">
+      <h2 class="post-card-title">
+        <a href="/posts/74e7/">直线过定点升级版——对合变换的复合</a>
+      </h2>
+      <div class="post-card-meta">
+        
+        <span class="meta-item">
+          <i class="fa fa-calendar"></i>
+          <time datetime="2026-05-05">2026-05-05</time>
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-folder"></i>
+          
+            <a href="/categories/research/">research</a>
+          
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags/research/">research</a>
+          
+        </span>
+        
+      </div>
+      <div class="post-card-excerpt">
+        
+          这篇文章指出了圆锥曲线上的一类直线过顶点问题，可以通过多重对合变换的复合来解释。这是我高二的时候在会考期间发现的，算是第一次有自己的“发现”——虽然意义不大，但还是挺有成就感的。
+        
+      </div>
+      <a href="/posts/74e7/" class="post-card-more">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-card animate-entry">
+    
+    <div class="post-card-body">
+      <h2 class="post-card-title">
+        <a href="/posts/d808/">《西方现代思想讲义》思维导图</a>
+      </h2>
+      <div class="post-card-meta">
+        
+        <span class="meta-item">
+          <i class="fa fa-calendar"></i>
+          <time datetime="2026-05-05">2026-05-05</time>
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-folder"></i>
+          
+            <a href="/categories/%E9%98%85%E8%AF%BB/">阅读</a>
+          
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags/%E9%98%85%E8%AF%BB/">阅读</a>
+          
+        </span>
+        
+      </div>
+      <div class="post-card-excerpt">
+        
+          高三读完《西方现代思想讲义》之后做的内容梳理，现在翻到好感慨QWQ
+        
+      </div>
+      <a href="/posts/d808/" class="post-card-more">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-card animate-entry">
+    
+    <div class="post-card-body">
+      <h2 class="post-card-title">
+        <a href="/posts/cb22/">计算机网络基础</a>
+      </h2>
+      <div class="post-card-meta">
+        
+        <span class="meta-item">
+          <i class="fa fa-calendar"></i>
+          <time datetime="2026-05-05">2026-05-05</time>
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-folder"></i>
+          
+            <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+          
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+          
+        </span>
+        
+      </div>
+      <div class="post-card-excerpt">
+        
+          计算机网络基础知识，主要是OSI 七层模型，TCP/IP 四层模型，各类网络协议简单介绍，以及数据封装过程。
+        
+      </div>
+      <a href="/posts/cb22/" class="post-card-more">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-card animate-entry">
+    
+    <div class="post-card-body">
+      <h2 class="post-card-title">
+        <a href="/posts/d0a8/">DDPM</a>
+      </h2>
+      <div class="post-card-meta">
+        
+        <span class="meta-item">
+          <i class="fa fa-calendar"></i>
+          <time datetime="2026-05-03">2026-05-03</time>
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-folder"></i>
+          
+            <a href="/categories/paper-reading/">paper reading</a>
+          
+            <a href="/categories/paper-reading/generation-models/">generation models</a>
+          
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags/paper-reading/">paper reading</a>
+          
+            <a href="/tags/Diffusion-Models/">Diffusion Models</a>
+          
+        </span>
+        
+      </div>
+      <div class="post-card-excerpt">
+        
+          DDPM (Denoising Diffusion Probabilistic Models) 是一种基于扩散过程的生成模型，通过逐步添加噪声并学习逆向过程来生成高质量的图像。本文将深入解析DDPM的核心概念、数学原理以及训练方法，帮助读者全面理解这一强大的生成模型。
+        
+      </div>
+      <a href="/posts/d0a8/" class="post-card-more">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-card animate-entry">
+    
+    <div class="post-card-body">
+      <h2 class="post-card-title">
+        <a href="/posts/7751/">日本語のノート</a>
+      </h2>
+      <div class="post-card-meta">
+        
+        <span class="meta-item">
+          <i class="fa fa-calendar"></i>
+          <time datetime="2026-04-14">2026-04-14</time>
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-folder"></i>
+          
+            <a href="/categories/interests/">interests</a>
+          
+            <a href="/categories/interests/%E6%97%A5%E6%9C%AC%E8%AA%9E/">日本語</a>
+          
+        </span>
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags/interests/">interests</a>
+          
+            <a href="/tags/language/">language</a>
+          
+        </span>
+        
+      </div>
+      <div class="post-card-excerpt">
+        
+          日语课笔记
+        
+      </div>
+      <a href="/posts/7751/" class="post-card-more">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-card animate-entry">
+    
+    <div class="post-card-body">
+      <h2 class="post-card-title">
+        <a href="/posts/180f/">Real Number</a>
+      </h2>
+      <div class="post-card-meta">
+        
+        <span class="meta-item">
+          <i class="fa fa-calendar"></i>
+          <time datetime="2026-04-13">2026-04-13</time>
+        </span>
+        
+        
+        
+        <span class="meta-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags/math/">math</a>
+          
+            <a href="/tags/analysis/">analysis</a>
+          
+        </span>
+        
+      </div>
+      <div class="post-card-excerpt">
+        
+          How to construct the real number system, and the fundamental properties of real numbers.
+        
+      </div>
+      <a href="/posts/180f/" class="post-card-more">阅读全文 →</a>
+    </div>
+  </article>
+  
+</div>
+
+<nav class="pagination animate-entry animate-delay-0">
+  
+  
+    
+      <span class="page-number current">1</span>
+    
+  
+    
+      <a href="/page/2/" class="page-number">2</a>
+    
+  
+  
+    <a href="/page/2/" class="page-btn next">下一页 →</a>
+  
+</nav>
+
+
+
+      </div>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    
+    <div class="footer-copyright">
+      &copy; 2026–2026 Jnyau Zheng
+    </div>
+    <div class="footer-runtime">
+      网站已运行 <span id="runtime-days">0</span> 天
+    </div>
+    
+    <div class="footer-powered">
+      Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <span>Dawn</span>
+    </div>
+    
+  </div>
+</footer>
+<script>
+  (function() {
+    var el = document.getElementById('runtime-days');
+    if (el) {
+      var start = new Date('2026-04-04');
+      el.textContent = Math.floor((Date.now() - start.getTime()) / 86400000);
+    }
+  })();
+</script>
+
+    </main>
+  </div>
+  <button class="sidebar-expand-btn" id="sidebar-expand-btn" title="展开侧边栏" aria-label="展开侧边栏">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+  <div class="floating-actions">
+    
+    <button class="back-to-top" id="back-to-top" aria-label="回到顶部">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+    
+    <button class="search-toggle-float" id="search-toggle-btn" title="搜索" aria-label="搜索">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    
+    
+    <button class="dark-toggle-float" id="dark-toggle-btn" title="暗色模式" aria-label="暗色模式">
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    
+    
+  </div>
+  <div class="search-overlay" id="search-overlay">
+    <div class="search-modal">
+      <div class="search-modal-header">
+        <input type="text" id="search-input" class="search-input" placeholder="输入关键词搜索文章..." autocomplete="off">
+        <button class="search-close-btn" id="search-close-btn" aria-label="关闭搜索">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="search-results" id="search-results"></div>
+    </div>
+  </div>
+  <script>
+(function() {
+  var STORAGE_KEY = 'dawn-theme';
+  var html = document.documentElement;
+
+  function getLabel(dark) {
+    return dark ? '亮色模式' : '暗色模式';
+  }
+
+  function updateUI(dark) {
+    var btn = document.getElementById('dark-toggle-btn');
+    if (!btn) return;
+    btn.setAttribute('title', getLabel(dark));
+    btn.setAttribute('aria-label', getLabel(dark));
+  }
+
+  var saved = localStorage.getItem(STORAGE_KEY);
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    html.classList.add('dark');
+    updateUI(true);
+  } else {
+    html.classList.remove('dark');
+    updateUI(false);
+  }
+
+  function setTheme(dark) {
+    if (dark) {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+    localStorage.setItem(STORAGE_KEY, dark ? 'dark' : 'light');
+    updateUI(dark);
+    updateGiscus(dark);
+  }
+
+  function updateGiscus(dark) {
+    var frame = document.querySelector('.giscus-frame');
+    if (frame) {
+      frame.contentWindow.postMessage({
+        giscus: { setConfig: { theme: dark ? 'dark' : 'light' } }
+      }, 'https://giscus.app');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('dark-toggle-btn');
+    if (btn) {
+      btn.addEventListener('click', function() {
+        setTheme(!html.classList.contains('dark'));
+      });
+    }
+  });
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+    if (localStorage.getItem(STORAGE_KEY) === null) {
+      setTheme(e.matches);
+    }
+  });
+})();
+</script>
+
+  <script src="/js/main.js"></script>
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'no-mathjax',
+        processHtmlClass: 'mathjax-process'
+      }
+    };
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+
+
+</body>
+</html>

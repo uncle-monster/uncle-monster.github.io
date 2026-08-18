@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>CS161 Lecture 2 - x86 Assembly and Call Stack | Jnyaublog</title>
+
+<meta name="description" content="Jnyau&#39;s blogs ">
+
+
+<meta name="author" content="Jnyau Zhneg">
+<link rel="alternate" href="/atom.xml" title="Jnyaublog" type="application/atom+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+
+<script>var giscusTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';</script>
+
+
+<script>
+(function() {
+  var saved = localStorage.getItem('dawn-theme');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+  }
+})();
+</script>
+<!-- Baidu Analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?9e1196964a6b21074cc28f08a3937327";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<meta name="generator" content="Hexo 8.1.1"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+<body>
+  <div class="site-wrapper">
+    <aside class="site-sidebar" id="sidebar">
+  <button class="sidebar-collapse-btn" id="sidebar-collapse-btn" title="折叠侧边栏" aria-label="折叠侧边栏">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div class="sidebar-inner">
+    
+    
+    <div class="sidebar-toc sidebar-toc--full">
+      <div class="sidebar-toc-header">
+        <h3 class="sidebar-toc-title">目录</h3>
+        <button class="toc-expand-all-btn" id="toc-expand-all-btn" title="展开全部目录" aria-label="展开全部目录">
+          <svg class="toc-expand-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <div class="sidebar-toc-content">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AD%A6%E4%B9%A0%E7%9B%AE%E6%A0%87"><span class="toc-text">1. 学习目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%A4%BA"><span class="toc-text">2. 数据表示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%9F%BA%E6%9C%AC%E5%8D%95%E4%BD%8D"><span class="toc-text">2.1 基本单位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6"><span class="toc-text">2.2 十六进制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-C-%E7%A8%8B%E5%BA%8F%E5%A6%82%E4%BD%95%E8%BF%90%E8%A1%8C"><span class="toc-text">3. C 程序如何运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80"><span class="toc-text">4. 内存布局</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4"><span class="toc-text">4.1 进程地址空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E9%87%8D%E8%A6%81%E5%8C%BA%E5%88%86"><span class="toc-text">4.2 重要区分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E5%8F%98%E9%87%8F%E7%9A%84%E7%9B%B8%E5%AF%B9%E9%A1%BA%E5%BA%8F%EF%BC%88%E6%8C%89%E6%9C%AC%E8%AF%BE%E5%81%87%E8%AE%BE%EF%BC%89"><span class="toc-text">4.3 变量的相对顺序（按本课假设）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%B0%8F%E7%AB%AF%E5%BA%8F%EF%BC%88Little-Endian%EF%BC%89"><span class="toc-text">5. 小端序（Little Endian）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-x86-%E6%9E%B6%E6%9E%84%E4%B8%8E%E6%B1%87%E7%BC%96%E8%AF%AD%E6%B3%95"><span class="toc-text">6. x86 架构与汇编语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E6%9C%AC%E8%AF%BE%E4%BD%BF%E7%94%A8%E7%9A%84-32-%E4%BD%8D%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">6.1 本课使用的 32 位寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-AT-T-%E8%AF%AD%E6%B3%95%E8%A7%84%E5%88%99"><span class="toc-text">6.2 AT&amp;T 语法规则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E6%A0%88%E3%80%81%E6%A0%88%E5%B8%A7%E4%B8%8E%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-text">7. 栈、栈帧与基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E6%A0%88%E5%B8%A7"><span class="toc-text">7.1 栈帧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-push-%E4%B8%8E-pop"><span class="toc-text">7.2 push 与 pop</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-x86-%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A"><span class="toc-text">8. x86 调用约定</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E5%8F%82%E6%95%B0%E4%B8%8E%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-text">8.1 参数与返回值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-Caller-saved-%E4%B8%8E-Callee-saved"><span class="toc-text">8.2 Caller-saved 与 Callee-saved</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-%E5%85%B8%E5%9E%8B%E6%A0%88%E5%B8%A7%E5%B8%83%E5%B1%80"><span class="toc-text">8.3 典型栈帧布局</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E4%B8%80%E6%AC%A1%E5%AE%8C%E6%95%B4%E7%9A%84%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8"><span class="toc-text">9. 一次完整的函数调用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-Caller%EF%BC%9A%E5%87%86%E5%A4%87%E5%B9%B6%E8%BD%AC%E7%A7%BB%E6%8E%A7%E5%88%B6"><span class="toc-text">9.1 Caller：准备并转移控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-Callee%EF%BC%9A%E5%87%BD%E6%95%B0%E5%BA%8F%E8%A8%80%EF%BC%88prologue%EF%BC%89"><span class="toc-text">9.2 Callee：函数序言（prologue）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-%E6%89%A7%E8%A1%8C%E5%87%BD%E6%95%B0%E4%BD%93"><span class="toc-text">9.3 执行函数体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-4-Callee%EF%BC%9A%E5%87%BD%E6%95%B0%E5%B0%BE%E5%A3%B0%EF%BC%88epilogue%EF%BC%89"><span class="toc-text">9.4 Callee：函数尾声（epilogue）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-5-Caller%EF%BC%9A%E6%B8%85%E7%90%86%E5%8F%82%E6%95%B0"><span class="toc-text">9.5 Caller：清理参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E6%AD%A5%E9%AA%A4%E9%80%9F%E8%AE%B0"><span class="toc-text">10. 完整调用步骤速记</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E9%98%B6%E6%AE%B5"><span class="toc-text">调用阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E9%98%B6%E6%AE%B5"><span class="toc-text">执行阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%94%E5%9B%9E%E9%98%B6%E6%AE%B5"><span class="toc-text">返回阶段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E6%98%93%E9%94%99%E7%82%B9"><span class="toc-text">11. 易错点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-%E8%87%AA%E6%B5%8B%E9%A2%98"><span class="toc-text">12. 自测题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Q1"><span class="toc-text">Q1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q2"><span class="toc-text">Q2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q3"><span class="toc-text">Q3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q4"><span class="toc-text">Q4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q5"><span class="toc-text">Q5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q6"><span class="toc-text">Q6</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-%E4%B8%80%E9%A1%B5%E6%80%BB%E7%BB%93"><span class="toc-text">13. 一页总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+      </div>
+    </div>
+    
+  </div>
+</aside>
+
+    <main class="main-content">
+      <header class="site-header">
+  <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <nav class="header-nav animate-stagger-50">
+    
+      <a href="/" class="nav-item animate-entry">首页</a>
+    
+      <a href="/about/" class="nav-item animate-entry">关于</a>
+    
+      <a href="/archives/" class="nav-item animate-entry">归档</a>
+    
+      <a href="/categories/" class="nav-item animate-entry">分类</a>
+    
+      <a href="/tags/" class="nav-item animate-entry">标签</a>
+    
+      <a href="/links/" class="nav-item animate-entry">友链</a>
+    
+  </nav>
+</header>
+
+      <div class="content-area">
+        <article class="post-full">
+  <header class="post-header">
+    <h1 class="post-title animate-entry animate-delay-0">CS161 Lecture 2 - x86 Assembly and Call Stack</h1>
+    <div class="post-meta animate-entry animate-delay-80">
+      
+      <span class="meta-item">
+        <i class="fa fa-calendar"></i>
+        <time datetime="2026-08-18">发布于 2026-08-18</time>
+      </span>
+      
+      
+      <span class="meta-item">
+        <i class="fa fa-edit"></i>
+        <time datetime="2026-08-18">更新于 2026-08-18</time>
+      </span>
+      
+      
+      <span class="meta-item">
+        <i class="fa fa-folder"></i>
+        
+          <a href="/categories/course/">course</a>
+        
+      </span>
+      
+    </div>
+    
+    <div class="post-tags animate-entry animate-delay-80">
+      
+        <a href="/tags/cs161/" class="tag-badge">#cs161</a>
+      
+        <a href="/tags/x86/" class="tag-badge">#x86</a>
+      
+        <a href="/tags/assembly/" class="tag-badge">#assembly</a>
+      
+        <a href="/tags/call-stack/" class="tag-badge">#call-stack</a>
+      
+    </div>
+    
+  </header>
+
+  
+
+  <div class="post-content">
+    <blockquote>
+<p>[!summary] 本讲主线<br>C 程序先被编译为汇编，再被转换为机器码并装入内存。运行时，CPU 通过寄存器执行指令，函数则按照 <strong>x86 调用约定</strong>在向低地址增长的栈上创建和销毁栈帧。</p>
+</blockquote>
+<h2 id="1-学习目标"><a href="#1-学习目标" class="headerlink" title="1. 学习目标"></a>1. 学习目标</h2><ul>
+<li>理解 bit、byte、word 与十六进制的关系。</li>
+<li>理解 C 源码到运行中程序的转换过程。</li>
+<li>掌握 32 位 x86 的内存布局和小端序。</li>
+<li>能读懂基本的 x86 AT&amp;T 汇编语法。</li>
+<li>理解 <code>%ebp</code>、<code>%esp</code>、<code>%eip</code> 在函数调用中的作用。</li>
+<li>能逐步追踪一次完整的函数调用、返回及栈帧变化。</li>
+</ul>
+<hr>
+<h2 id="2-数据表示"><a href="#2-数据表示" class="headerlink" title="2. 数据表示"></a>2. 数据表示</h2><h3 id="2-1-基本单位"><a href="#2-1-基本单位" class="headerlink" title="2.1 基本单位"></a>2.1 基本单位</h3><table>
+<thead>
+<tr>
+<th>单位</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bit</td>
+<td>一个二进制位，取值为 <code>0</code> 或 <code>1</code></td>
+</tr>
+<tr>
+<td>byte</td>
+<td>8 bits</td>
+</tr>
+<tr>
+<td>word（本课 32 位环境）</td>
+<td>4 bytes = 32 bits</td>
+</tr>
+</tbody></table>
+<p>在 32 位系统中：</p>
+<ul>
+<li>地址长度为 32 bits；</li>
+<li>一个地址对应 <strong>1 byte</strong>；</li>
+<li>可表示的地址范围为 <code>0x00000000</code>～<code>0xFFFFFFFF</code>；</li>
+<li>理论地址空间大小为 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: 0;" xmlns="http://www.w3.org/2000/svg" width="2.919ex" height="1.887ex" role="img" focusable="false" viewBox="0 -833.9 1290.1 833.9"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mn"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g><g data-mml-node="TeXAtom" transform="translate(533,363) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="mn"><path data-c="33" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z"></path><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" transform="translate(500,0)"></path></g></g></g></g></g></svg></mjx-container> bytes，即 4 GiB。</li>
+</ul>
+<h3 id="2-2-十六进制"><a href="#2-2-十六进制" class="headerlink" title="2.2 十六进制"></a>2.2 十六进制</h3><ul>
+<li>1 个十六进制位表示 4 bits。</li>
+<li>2 个十六进制位表示 1 byte。</li>
+<li>前缀 <code>0b</code> 表示二进制，前缀 <code>0x</code> 表示十六进制。</li>
+</ul>
+<p>例如：</p>
+<pre><code class="hljs text">0b11000110 = 0xC6</code></pre>
+
+<p>常用对应关系：</p>
+<table>
+<thead>
+<tr>
+<th>二进制</th>
+<th align="right">十六进制</th>
+<th>二进制</th>
+<th align="right">十六进制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0000</code></td>
+<td align="right"><code>0</code></td>
+<td><code>1000</code></td>
+<td align="right"><code>8</code></td>
+</tr>
+<tr>
+<td><code>0001</code></td>
+<td align="right"><code>1</code></td>
+<td><code>1001</code></td>
+<td align="right"><code>9</code></td>
+</tr>
+<tr>
+<td><code>0010</code></td>
+<td align="right"><code>2</code></td>
+<td><code>1010</code></td>
+<td align="right"><code>A</code></td>
+</tr>
+<tr>
+<td><code>0011</code></td>
+<td align="right"><code>3</code></td>
+<td><code>1011</code></td>
+<td align="right"><code>B</code></td>
+</tr>
+<tr>
+<td><code>0100</code></td>
+<td align="right"><code>4</code></td>
+<td><code>1100</code></td>
+<td align="right"><code>C</code></td>
+</tr>
+<tr>
+<td><code>0101</code></td>
+<td align="right"><code>5</code></td>
+<td><code>1101</code></td>
+<td align="right"><code>D</code></td>
+</tr>
+<tr>
+<td><code>0110</code></td>
+<td align="right"><code>6</code></td>
+<td><code>1110</code></td>
+<td align="right"><code>E</code></td>
+</tr>
+<tr>
+<td><code>0111</code></td>
+<td align="right"><code>7</code></td>
+<td><code>1111</code></td>
+<td align="right"><code>F</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="3-C-程序如何运行"><a href="#3-C-程序如何运行" class="headerlink" title="3. C 程序如何运行"></a>3. C 程序如何运行</h2><pre><code class="hljs text">C 源代码
+   │ compiler（编译器）
+   ▼
+汇编代码（如 x86、RISC-V）
+   │ assembler（汇编器）
+   ▼
+机器码（原始字节）
+   │ linker（链接器）处理依赖和库
+   ▼
+可执行文件
+   │ loader（加载器）建立地址空间并启动程序
+   ▼
+运行中的进程</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Compiler</td>
+<td>将 C 等高级语言转换为特定指令集的汇编代码</td>
+</tr>
+<tr>
+<td>Assembler</td>
+<td>将汇编指令编码为机器码</td>
+</tr>
+<tr>
+<td>Linker</td>
+<td>解析符号，将程序与依赖库组合起来</td>
+</tr>
+<tr>
+<td>Loader</td>
+<td>请求并建立进程内存空间，装入代码并开始执行</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>[!important]<br><strong>汇编语言与机器码都依赖指令集架构（ISA）</strong>。同一段 C 代码可以被编译成 x86 或 RISC-V 汇编，但二者的指令和编码不同。</p>
+</blockquote>
+<hr>
+<h2 id="4-内存布局"><a href="#4-内存布局" class="headerlink" title="4. 内存布局"></a>4. 内存布局</h2><h3 id="4-1-进程地址空间"><a href="#4-1-进程地址空间" class="headerlink" title="4.1 进程地址空间"></a>4.1 进程地址空间</h3><pre><code class="hljs text">高地址  ┌─────────────────┐
+        │ Stack           │  函数栈帧、局部变量
+        │       ↓         │  向低地址增长
+        │                 │
+        │       ↑         │
+        │ Heap            │  malloc/free 管理的动态内存
+        ├─────────────────┤
+        │ Data / Static   │  全局变量、静态变量
+        ├─────────────────┤
+低地址  │ Code / Text     │  程序机器指令
+        └─────────────────┘</code></pre>
+
+<h3 id="4-2-重要区分"><a href="#4-2-重要区分" class="headerlink" title="4.2 重要区分"></a>4.2 重要区分</h3><ul>
+<li><strong>内存</strong>是一长串按 byte 编址的空间，位置用数值地址表示。</li>
+<li><strong>寄存器</strong>位于 CPU 内部，用名字引用，如 <code>%eax</code>、<code>%ebp</code>、<code>%esp</code>、<code>%eip</code>。</li>
+<li>“栈向下增长”是指分配新栈空间时地址变小，不是说栈中每个对象的字节顺序都反向。</li>
+</ul>
+<h3 id="4-3-变量的相对顺序（按本课假设）"><a href="#4-3-变量的相对顺序（按本课假设）" class="headerlink" title="4.3 变量的相对顺序（按本课假设）"></a>4.3 变量的相对顺序（按本课假设）</h3><ul>
+<li>编译器把局部变量放在栈上。</li>
+<li>一个栈帧中的局部变量：先声明的变量位于较高地址。</li>
+<li><code>struct</code> 的成员：先声明的成员位于较低地址。</li>
+<li>全局变量：先声明的变量位于较低地址。</li>
+</ul>
+<hr>
+<h2 id="5-小端序（Little-Endian）"><a href="#5-小端序（Little-Endian）" class="headerlink" title="5. 小端序（Little Endian）"></a>5. 小端序（Little Endian）</h2><p>x86 使用小端序：多字节数值的 <strong>最低有效字节（LSB）放在最低地址</strong>。</p>
+<p>假设从低地址到高地址依次存放：</p>
+<pre><code class="hljs text">地址：  0x00  0x01  0x02  0x03
+字节：  0x11  0x22  0x33  0x44</code></pre>
+
+<p>则：</p>
+<ul>
+<li>地址 <code>0x00</code> 处的 <strong>byte</strong> 是 <code>0x11</code>；</li>
+<li>地址 <code>0x00</code> 处开始的 4-byte <strong>word</strong> 是 <code>0x44332211</code>。</li>
+</ul>
+<p>换言之，数值 <code>0x44332211</code> 在内存中从低地址到高地址排列为：</p>
+<pre><code class="hljs text">11 22 33 44</code></pre>
+
+<blockquote>
+<p>[!warning] 常见误区</p>
+<ul>
+<li>端序只讨论<strong>多字节值在内存中的字节排列</strong>，单独一个 byte 没有端序问题。</li>
+<li>十六进制数正常书写时仍然把最高有效位写在左侧；只有观察其内存字节时才会看到“小端倒序”。</li>
+<li>不要把“栈向低地址增长”和“小端序”混为一谈：前者描述分配方向，后者描述一个多字节值的存储顺序。</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="6-x86-架构与汇编语法"><a href="#6-x86-架构与汇编语法" class="headerlink" title="6. x86 架构与汇编语法"></a>6. x86 架构与汇编语法</h2><h3 id="6-1-本课使用的-32-位寄存器"><a href="#6-1-本课使用的-32-位寄存器" class="headerlink" title="6.1 本课使用的 32 位寄存器"></a>6.1 本课使用的 32 位寄存器</h3><table>
+<thead>
+<tr>
+<th>寄存器</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>%eax</code></td>
+<td>通用寄存器；函数返回值放在这里</td>
+</tr>
+<tr>
+<td><code>%ebx</code>、<code>%ecx</code>、<code>%edx</code>、<code>%esi</code>、<code>%edi</code></td>
+<td>通用寄存器</td>
+</tr>
+<tr>
+<td><code>%esp</code></td>
+<td>Stack Pointer，指向当前栈的最低已用地址／当前栈帧底部</td>
+</tr>
+<tr>
+<td><code>%ebp</code></td>
+<td>Base/Frame Pointer，指向当前栈帧顶部，即保存旧 <code>%ebp</code> 的位置</td>
+</tr>
+<tr>
+<td><code>%eip</code></td>
+<td>Instruction Pointer，指向下一条将执行的指令</td>
+</tr>
+</tbody></table>
+<p>寄存器中可以保存普通 32 位数，也可以保存 32 位地址；寄存器图中画成箭头时，寄存器实际存的是箭头所指位置的地址。</p>
+<h3 id="6-2-AT-T-语法规则"><a href="#6-2-AT-T-语法规则" class="headerlink" title="6.2 AT&T 语法规则"></a>6.2 AT&amp;T 语法规则</h3><table>
+<thead>
+<tr>
+<th>写法</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>%reg</code></td>
+<td>寄存器</td>
+<td><code>%eax</code></td>
+</tr>
+<tr>
+<td><code>$imm</code></td>
+<td>立即数／常量</td>
+<td><code>$1</code>、<code>$0x4</code></td>
+</tr>
+<tr>
+<td><code>(%reg)</code></td>
+<td>访问寄存器所存地址处的内存</td>
+<td><code>(%esp)</code></td>
+</tr>
+<tr>
+<td><code>offset(%reg)</code></td>
+<td>访问地址 <code>reg + offset</code> 处的内存</td>
+<td><code>8(%esp)</code></td>
+</tr>
+</tbody></table>
+<p>指令的一般形式为：</p>
+<pre><code class="hljs asm">opcode source, destination</code></pre>
+
+<p>即 <strong>源操作数在前，目标操作数在后</strong>；目标通常也是输入之一。</p>
+<p>示例：</p>
+<pre><code class="hljs asm">add $0x8, %ebx</code></pre>
+
+<p>等价于：</p>
+<pre><code class="hljs text">EBX = EBX + 0x8</code></pre>
+
+<pre><code class="hljs asm">xorl 4(%esi), %eax</code></pre>
+
+<p>等价于：</p>
+<pre><code class="hljs text">EAX = EAX XOR *(ESI + 4)</code></pre>
+
+<hr>
+<h2 id="7-栈、栈帧与基本操作"><a href="#7-栈、栈帧与基本操作" class="headerlink" title="7. 栈、栈帧与基本操作"></a>7. 栈、栈帧与基本操作</h2><h3 id="7-1-栈帧"><a href="#7-1-栈帧" class="headerlink" title="7.1 栈帧"></a>7.1 栈帧</h3><ul>
+<li>每次调用函数，都为该函数在栈上建立一个新栈帧。</li>
+<li>栈帧保存局部变量，以及恢复调用者状态所需的信息。</li>
+<li>函数返回后，该栈帧被逻辑上销毁。</li>
+<li>调用越深，栈越向低地址扩展。</li>
+</ul>
+<p>在当前函数中：</p>
+<ul>
+<li><code>%ebp</code> 标记栈帧顶部；</li>
+<li><code>%esp</code> 标记栈帧底部，也是当前栈的最低已用地址；</li>
+<li><code>%esp</code> 以下的内容视为未定义／不可用。</li>
+</ul>
+<h3 id="7-2-push-与-pop"><a href="#7-2-push-与-pop" class="headerlink" title="7.2 push 与 pop"></a>7.2 <code>push</code> 与 <code>pop</code></h3><p>32 位环境中，一次操作一个 word（4 bytes）。</p>
+<p><code>push src</code>：</p>
+<pre><code class="hljs text">ESP = ESP - 4
+*(ESP) = src</code></pre>
+
+<p><code>pop dst</code>：</p>
+<pre><code class="hljs text">dst = *(ESP)
+ESP = ESP + 4</code></pre>
+
+<blockquote>
+<p>[!note]<br>“删除”栈上内容通常只是移动 <code>%esp</code>，不会立即把旧字节清零；这些字节虽可能仍留在内存中，但已不属于有效栈空间。</p>
+</blockquote>
+<hr>
+<h2 id="8-x86-调用约定"><a href="#8-x86-调用约定" class="headerlink" title="8. x86 调用约定"></a>8. x86 调用约定</h2><p>调用约定是一组函数之间共同遵守的规则，规定：</p>
+<ol>
+<li>参数如何传递；</li>
+<li>返回值放在哪里；</li>
+<li>哪些寄存器由 caller 或 callee 负责保存；</li>
+<li>局部变量如何放入栈帧；</li>
+<li>调用和返回时如何恢复处理器状态。</li>
+</ol>
+<h3 id="8-1-参数与返回值"><a href="#8-1-参数与返回值" class="headerlink" title="8.1 参数与返回值"></a>8.1 参数与返回值</h3><ul>
+<li>参数按<strong>逆序</strong>压栈。</li>
+<li>调用 <code>func(val1, val2, val3)</code> 时，依次执行 <code>push val3</code>、<code>push val2</code>、<code>push val1</code>。</li>
+<li>返回值存入 <code>%eax</code>。</li>
+<li>本课示例由 <strong>caller 清理参数</strong>，如两个 4-byte 参数对应 <code>add $8, %esp</code>。</li>
+</ul>
+<h3 id="8-2-Caller-saved-与-Callee-saved"><a href="#8-2-Caller-saved-与-Callee-saved" class="headerlink" title="8.2 Caller-saved 与 Callee-saved"></a>8.2 Caller-saved 与 Callee-saved</h3><ul>
+<li><strong>Caller-saved</strong>：callee 可以覆盖；若 caller 还要使用旧值，应在调用前自行保存。</li>
+<li><strong>Callee-saved</strong>：callee 若要改动，必须先保存，并在返回前恢复。</li>
+<li><code>%ebp</code> 在本课调用流程中需要由 callee 保存和恢复。</li>
+</ul>
+<h3 id="8-3-典型栈帧布局"><a href="#8-3-典型栈帧布局" class="headerlink" title="8.3 典型栈帧布局"></a>8.3 典型栈帧布局</h3><p>对于 <code>callee(1, 2)</code>，完成函数序言后：</p>
+<pre><code class="hljs text">高地址
+┌────────────────────┐
+│ argument 2         │  12(%ebp)
+├────────────────────┤
+│ argument 1         │   8(%ebp)
+├────────────────────┤
+│ RIP / return addr  │   4(%ebp)  ← call 保存的旧 EIP
+├────────────────────┤
+│ SFP / saved EBP    │   0(%ebp)  ← %ebp 指向这里
+├────────────────────┤
+│ local variable     │  -4(%ebp)
+├────────────────────┤
+│ more locals ...    │             ← %esp 位于栈帧底部
+└────────────────────┘
+低地址</code></pre>
+
+<p>缩写：</p>
+<ul>
+<li><strong>RIP</strong>：Return Instruction Pointer，保存的返回地址（旧 <code>%eip</code>）。</li>
+<li><strong>SFP</strong>：Saved Frame Pointer，保存的调用者 <code>%ebp</code>。</li>
+</ul>
+<blockquote>
+<p>[!tip] 快速定位<br>在标准 32 位栈帧中，以 <code>%ebp</code> 为基准：负偏移通常是局部变量，<code>0(%ebp)</code> 是旧 <code>%ebp</code>，<code>4(%ebp)</code> 是返回地址，<code>8(%ebp)</code> 起是参数。</p>
+</blockquote>
+<hr>
+<h2 id="9-一次完整的函数调用"><a href="#9-一次完整的函数调用" class="headerlink" title="9. 一次完整的函数调用"></a>9. 一次完整的函数调用</h2><p>示例 C 代码：</p>
+<pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">caller</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    callee(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">callee</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> {
+    <span class="hljs-type">int</span> local;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">42</span>;
+}</code></pre>
+
+<p>对应的简化 x86 汇编：</p>
+<pre><code class="hljs asm">caller:
+    ...
+    push $2
+    push $1
+    call callee
+    add  $8, %esp
+    ...
+
+callee:
+    push %ebp
+    mov  %esp, %ebp
+    sub  $4, %esp
+    mov  $42, %eax
+    mov  %ebp, %esp
+    pop  %ebp
+    ret</code></pre>
+
+<h3 id="9-1-Caller：准备并转移控制"><a href="#9-1-Caller：准备并转移控制" class="headerlink" title="9.1 Caller：准备并转移控制"></a>9.1 Caller：准备并转移控制</h3><ol>
+<li><code>push $2</code>：先压入最后一个参数。</li>
+<li><code>push $1</code>：再压入第一个参数。</li>
+<li><code>call callee</code> 同时完成两件事：<ul>
+<li>把下一条 caller 指令的地址压栈，作为 RIP；</li>
+<li>把 <code>%eip</code> 改为 <code>callee</code> 的入口地址。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><code>%eip</code> 指向的是<strong>下一条要执行的指令</strong>，所以保存它后才能在 callee 返回时继续执行 <code>call</code> 后面的代码。</p>
+</blockquote>
+<h3 id="9-2-Callee：函数序言（prologue）"><a href="#9-2-Callee：函数序言（prologue）" class="headerlink" title="9.2 Callee：函数序言（prologue）"></a>9.2 Callee：函数序言（prologue）</h3><pre><code class="hljs asm">push %ebp
+mov  %esp, %ebp
+sub  $4, %esp</code></pre>
+
+<p>逐步含义：</p>
+<ol>
+<li>保存 caller 的 <code>%ebp</code>，这个值称为 SFP。</li>
+<li>令新 <code>%ebp = %esp</code>，建立当前栈帧顶部。</li>
+<li><code>%esp</code> 减小，为局部变量分配空间；空间大小由编译器决定。</li>
+</ol>
+<h3 id="9-3-执行函数体"><a href="#9-3-执行函数体" class="headerlink" title="9.3 执行函数体"></a>9.3 执行函数体</h3><pre><code class="hljs asm">mov $42, %eax</code></pre>
+
+<p>返回值按约定放入 <code>%eax</code>。</p>
+<h3 id="9-4-Callee：函数尾声（epilogue）"><a href="#9-4-Callee：函数尾声（epilogue）" class="headerlink" title="9.4 Callee：函数尾声（epilogue）"></a>9.4 Callee：函数尾声（epilogue）</h3><pre><code class="hljs asm">mov %ebp, %esp
+pop %ebp
+ret</code></pre>
+
+<p>逐步含义：</p>
+<ol>
+<li><code>%esp = %ebp</code>：释放所有局部变量空间。</li>
+<li><code>pop %ebp</code>：从 SFP 恢复 caller 的 <code>%ebp</code>。</li>
+<li><code>ret</code>：行为近似 <code>pop %eip</code>，从 RIP 恢复返回地址并回到 caller。</li>
+</ol>
+<p>前两条也常写成：</p>
+<pre><code class="hljs asm">leave</code></pre>
+
+<h3 id="9-5-Caller：清理参数"><a href="#9-5-Caller：清理参数" class="headerlink" title="9.5 Caller：清理参数"></a>9.5 Caller：清理参数</h3><pre><code class="hljs asm">add $8, %esp</code></pre>
+
+<p>两个参数共 8 bytes，caller 上移 <code>%esp</code>，移除参数。至此，除返回值外，栈和关键控制状态恢复到调用前。</p>
+<hr>
+<h2 id="10-完整调用步骤速记"><a href="#10-完整调用步骤速记" class="headerlink" title="10. 完整调用步骤速记"></a>10. 完整调用步骤速记</h2><h3 id="调用阶段"><a href="#调用阶段" class="headerlink" title="调用阶段"></a>调用阶段</h3><ol>
+<li>参数逆序压栈。</li>
+<li><code>call</code> 保存旧 <code>%eip</code>（RIP）。</li>
+<li><code>call</code> 更新 <code>%eip</code>，跳转到 callee。</li>
+<li>callee 保存旧 <code>%ebp</code>（SFP）。</li>
+<li>更新 <code>%ebp</code>，建立新栈帧顶部。</li>
+<li>更新 <code>%esp</code>，为局部变量分配空间。</li>
+</ol>
+<h3 id="执行阶段"><a href="#执行阶段" class="headerlink" title="执行阶段"></a>执行阶段</h3><ol start="7">
+<li>执行 callee，返回值写入 <code>%eax</code>。</li>
+</ol>
+<h3 id="返回阶段"><a href="#返回阶段" class="headerlink" title="返回阶段"></a>返回阶段</h3><ol start="8">
+<li><code>%esp = %ebp</code>，释放局部变量。</li>
+<li>恢复旧 <code>%ebp</code>。</li>
+<li><code>ret</code> 恢复旧 <code>%eip</code>，返回 caller。</li>
+<li>caller 移动 <code>%esp</code>，清理参数。</li>
+</ol>
+<p>记忆链：</p>
+<pre><code class="hljs text">参数 → RIP → SFP → locals → 返回值 → 丢弃 locals → 恢复 SFP → 恢复 RIP → 清参数</code></pre>
+
+<hr>
+<h2 id="11-易错点"><a href="#11-易错点" class="headerlink" title="11. 易错点"></a>11. 易错点</h2><ol>
+<li><strong>AT&amp;T 语法的目标在最后</strong>：<code>mov source, destination</code>。</li>
+<li><strong>立即数必须带 <code>$</code></strong>：<code>$42</code> 是数值 42；<code>42</code> 可能被解释为内存地址。</li>
+<li><strong>寄存器带 <code>%</code></strong>：<code>%eax</code>。</li>
+<li><strong>括号表示内存解引用</strong>：<code>8(%ebp)</code> 是内存值，不是简单的加法结果。</li>
+<li><strong>栈向低地址增长</strong>：<code>push</code> 先减小 <code>%esp</code>。</li>
+<li><strong>参数逆序入栈</strong>：这样第一个参数离返回地址最近，并能用固定正偏移访问。</li>
+<li><strong><code>call</code> 不只是跳转</strong>：它还保存返回地址。</li>
+<li><strong><code>ret</code> 不只是跳转</strong>：它从栈顶取回返回地址，同时移动 <code>%esp</code>。</li>
+<li><strong><code>%ebp</code> 与 <code>%esp</code> 不同</strong>：前者在函数执行期间通常稳定，后者会随压栈、出栈和分配空间而变化。</li>
+<li><strong>释放栈空间不等于清零</strong>：移动 <code>%esp</code> 后，旧数据可能仍在内存里。</li>
+</ol>
+<hr>
+<h2 id="12-自测题"><a href="#12-自测题" class="headerlink" title="12. 自测题"></a>12. 自测题</h2><h3 id="Q1"><a href="#Q1" class="headerlink" title="Q1"></a>Q1</h3><p>内存从低到高为 <code>EF BE AD DE</code>，按小端序读取一个 4-byte word，结果是什么？</p>
+<h3 id="Q2"><a href="#Q2" class="headerlink" title="Q2"></a>Q2</h3><p><code>8(%ebp)</code> 表示什么？</p>
+<h3 id="Q3"><a href="#Q3" class="headerlink" title="Q3"></a>Q3</h3><p>执行 <code>push %eax</code> 后，<code>%esp</code> 如何变化？</p>
+<h3 id="Q4"><a href="#Q4" class="headerlink" title="Q4"></a>Q4</h3><p><code>call foo</code> 完成哪两件关键事情？</p>
+<h3 id="Q5"><a href="#Q5" class="headerlink" title="Q5"></a>Q5</h3><p>为什么返回前必须恢复旧 <code>%ebp</code> 和旧 <code>%eip</code>？</p>
+<h3 id="Q6"><a href="#Q6" class="headerlink" title="Q6"></a>Q6</h3><p>调用 <code>f(a, b, c)</code> 时，参数按什么顺序压栈？</p>
+<details>
+<summary>答案</summary>
+
+<ol>
+<li><code>0xDEADBEEF</code>。</li>
+<li>访问地址 <code>%ebp + 8</code> 处的内存；在标准 32 位栈帧中通常是第一个参数。</li>
+<li><code>%esp</code> 先减 4，再把 <code>%eax</code> 的值写入新的栈顶。</li>
+<li>把返回地址压栈，并让 <code>%eip</code> 跳转到 <code>foo</code>。</li>
+<li>恢复 caller 的栈帧基准和继续执行的位置。</li>
+<li><code>c → b → a</code>，即逆序压栈。</li>
+</ol>
+</details>
+
+<hr>
+<h2 id="13-一页总结"><a href="#13-一页总结" class="headerlink" title="13. 一页总结"></a>13. 一页总结</h2><pre><code class="hljs text">数据：1 byte = 8 bits；本课 1 word = 4 bytes
+端序：x86 小端，最低有效字节放在最低地址
+语法：opcode source, destination
+内存：Code → Data → Heap ↑ ... ↓ Stack
+寄存器：EBP=当前栈帧顶部，ESP=当前栈底，EIP=下一条指令
+返回值：EAX
+调用：逆序压参数 → call 保存 RIP 并跳转
+序言：push EBP → EBP=ESP → ESP-=locals_size
+尾声：ESP=EBP → pop EBP → ret
+清理：caller 上移 ESP 移除参数</code></pre>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li>课件：CS 161 Fall 2025 Lecture 2, <em>x86 Assembly and Call Stack</em></li>
+<li>课件标注教材章节：2.1～2.7（其中本讲重点为 2.4、2.6、2.7）</li>
+</ul>
+
+  </div>
+
+  
+  <div class="post-copyright animate-entry animate-delay-300">
+    <p><strong>本文作者：</strong>Jnyau Zhneg</p>
+    <p><strong>本文链接：</strong><a href="/posts/301c/">/posts/301c/</a></p>
+    <p><strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议</p>
+  </div>
+  
+</article>
+
+
+<nav class="post-navigation animate-entry animate-delay-300">
+  
+  
+    <a href="/posts/d7d7/" class="post-nav-item next" title="科学上网推荐">
+      <span class="nav-text">科学上网推荐</span>
+      <span class="nav-arrow">→</span>
+    </a>
+  
+</nav>
+
+
+
+<div class="post-comments">
+  <div class="comments-header">
+    <h3>评论</h3>
+  </div>
+  <script>
+    var giscusTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+  </script>
+  <script src="https://giscus.app/client.js"
+    data-repo="uncle-monster/uncle-monster.github.io"
+    data-repo-id="R_kgDOR4e51Q"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOR4e51c4C6A5b"
+    data-mapping="pathname"
+    data-strict="false"
+    data-reactions-enabled="true"
+    data-emit-metadata="false"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="zh-CN"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+
+
+      </div>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    
+    <div class="footer-copyright">
+      &copy; 2026–2026 Jnyau Zheng
+    </div>
+    <div class="footer-runtime">
+      网站已运行 <span id="runtime-days">0</span> 天
+    </div>
+    
+    <div class="footer-powered">
+      Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <span>Dawn</span>
+    </div>
+    
+  </div>
+</footer>
+<script>
+  (function() {
+    var el = document.getElementById('runtime-days');
+    if (el) {
+      var start = new Date('2026-04-04');
+      el.textContent = Math.floor((Date.now() - start.getTime()) / 86400000);
+    }
+  })();
+</script>
+
+    </main>
+  </div>
+  <button class="sidebar-expand-btn" id="sidebar-expand-btn" title="展开侧边栏" aria-label="展开侧边栏">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+  <div class="floating-actions">
+    
+    <div class="back-to-top-wrap" id="back-to-top-wrap">
+      <svg class="progress-ring" width="52" height="52" viewBox="0 0 52 52">
+        <circle class="progress-ring-bg" cx="26" cy="26" r="23"/>
+        <circle class="progress-ring-fill" id="progress-ring-fill" cx="26" cy="26" r="23"/>
+      </svg>
+      <button class="back-to-top" id="back-to-top" aria-label="回到顶部">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
+    </div>
+    
+    <button class="search-toggle-float" id="search-toggle-btn" title="搜索" aria-label="搜索">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    
+    <a href="/" class="floating-home" aria-label="回到主页" title="回到主页">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </a>
+    
+    
+    <button class="dark-toggle-float" id="dark-toggle-btn" title="暗色模式" aria-label="暗色模式">
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    
+    
+    <button class="immersive-toggle" id="immersive-toggle-btn" title="沉浸式阅读" aria-label="沉浸式阅读">
+      <svg class="icon-enter" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+      <svg class="icon-exit" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 8 3 3 8 3"/><polyline points="20 16 21 21 16 21"/><line x1="14" y1="14" x2="21" y2="21"/><line x1="3" y1="3" x2="10" y2="10"/></svg>
+    </button>
+    
+  </div>
+  <div class="search-overlay" id="search-overlay">
+    <div class="search-modal">
+      <div class="search-modal-header">
+        <input type="text" id="search-input" class="search-input" placeholder="输入关键词搜索文章..." autocomplete="off">
+        <button class="search-close-btn" id="search-close-btn" aria-label="关闭搜索">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="search-results" id="search-results"></div>
+    </div>
+  </div>
+  <script>
+(function() {
+  var STORAGE_KEY = 'dawn-theme';
+  var html = document.documentElement;
+
+  function getLabel(dark) {
+    return dark ? '亮色模式' : '暗色模式';
+  }
+
+  function updateUI(dark) {
+    var btn = document.getElementById('dark-toggle-btn');
+    if (!btn) return;
+    btn.setAttribute('title', getLabel(dark));
+    btn.setAttribute('aria-label', getLabel(dark));
+  }
+
+  var saved = localStorage.getItem(STORAGE_KEY);
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    html.classList.add('dark');
+    updateUI(true);
+  } else {
+    html.classList.remove('dark');
+    updateUI(false);
+  }
+
+  function setTheme(dark) {
+    if (dark) {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+    localStorage.setItem(STORAGE_KEY, dark ? 'dark' : 'light');
+    updateUI(dark);
+    updateGiscus(dark);
+  }
+
+  function updateGiscus(dark) {
+    var frame = document.querySelector('.giscus-frame');
+    if (frame) {
+      frame.contentWindow.postMessage({
+        giscus: { setConfig: { theme: dark ? 'dark' : 'light' } }
+      }, 'https://giscus.app');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('dark-toggle-btn');
+    if (btn) {
+      btn.addEventListener('click', function() {
+        setTheme(!html.classList.contains('dark'));
+      });
+    }
+  });
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+    if (localStorage.getItem(STORAGE_KEY) === null) {
+      setTheme(e.matches);
+    }
+  });
+})();
+</script>
+
+  <script src="/js/main.js"></script>
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'no-mathjax',
+        processHtmlClass: 'mathjax-process'
+      }
+    };
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+
+
+</body>
+</html>
